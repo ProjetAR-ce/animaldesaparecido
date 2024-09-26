@@ -1,0 +1,40 @@
+<html>
+<head>
+    <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+
+    <script>
+        AFRAME.registerComponent("mytarget", {
+            init: function () {
+                this.el.addEventListener("targetFound", (event) => {
+                    console.log("target found");
+                    const video = document.querySelector('#video');
+                    video.play(); // Reproduz o vídeo quando o target é encontrado
+                });
+                this.el.addEventListener("targetLost", (event) => {
+                    console.log("target lost");
+                    const video = document.querySelector('#video');
+                    video.pause(); // Pausa o vídeo quando o target é perdido
+                });
+            },
+        });
+    </script>
+</head>
+
+<body>
+    <a-scene mindar-image="imageTargetSrc: assets/markers/targetsdesenrola.mind; showStats: false; uiScanning: yes;"
+        embedded color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights"
+        vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
+
+        <a-assets>
+            <video id="video" src="https://drive.google.com/uc?export=download&id=1bZis3XGPN_uFHvI-qmXIFPvI9F0PNkDl" autoplay="false" loop="true" crossorigin="anonymous"></video> <!-- Link direto para download do Google Drive -->
+        </a-assets>
+
+        <a-camera position="0 0 0" look-controls="enabled: false" cursor="fuse: false; rayOrigin: mouse;" raycaster="near: 10; far: 10000; objects: .clickable"></a-camera>
+
+        <a-entity id="mytarget" mytarget mindar-image-target="targetIndex: 0">
+            <a-video src="#video" position="0 0 0.5" rotation="0 0 0" width="1.0" height="0.6"></a-video> <!-- Exibe o vídeo -->
+        </a-entity>
+    </a-scene>
+</body>
+</html>
